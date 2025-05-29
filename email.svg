@@ -1,0 +1,5 @@
+<svg class="group" height="32" width="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path class="fill-sub transition-all delay-50 duration-200 group-hover:fill-body" fill-rule="evenodd" clip-rule="evenodd"
+    d="M44 11.5V36.5C44 38.43 42.43 40 40.5 40H7.5C5.57 40 4 38.43 4 36.5V11.5C4 9.57 5.57 8 7.5 8H40.5C42.43 8 44 9.57 44 11.5ZM40.5 11L24 23L7.5 11H40.5ZM7 13.97V36.5C7 36.7761 7.22386 37 7.5 37H40.5C40.7761 37 41 36.7761 41 36.5V13.97L24.68 26.13C24.2812 26.4261 23.7188 26.4261 23.32 26.13L7 13.97Z"
+    fill="#D44638"/>
+</svg>

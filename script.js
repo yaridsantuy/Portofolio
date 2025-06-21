@@ -6,38 +6,79 @@ const workImgs = document.querySelectorAll(".work-img");
 const mainEl = document.querySelector("main");
 const yearEl = document.querySelector(".footer-text span");
 
-const toggleNav = () => {
-  nav.classList.toggle("hidden");
+// ===== MENU (Only if exists) =====
+if (btnToggleNav && nav) {
+  const toggleNav = () => {
+    nav.classList.toggle("hidden");
+    document.body.classList.toggle("lock-screen");
 
-  // Prevent screen from scrolling when menu is opened
-  document.body.classList.toggle("lock-screen");
+    if (nav.classList.contains("hidden")) {
+      btnToggleNav.textContent = "menu";
+    } else {
+      setTimeout(() => {
+        btnToggleNav.textContent = "close";
+      }, 475);
+    }
+  };
 
-  if (nav.classList.contains("hidden")) {
-    btnToggleNav.textContent = "menu";
+  btnToggleNav.addEventListener("click", toggleNav);
+
+  if (navMenu) {
+    navMenu.addEventListener("click", (e) => {
+      if (e.target.localName === "a") {
+        toggleNav();
+      }
+    });
+  }
+
+  document.body.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !nav.classList.contains("hidden")) {
+      toggleNav();
+    }
+  });
+
+  const lastFocusedEl = document.querySelector('a[data-focused="last-focused"]');
+  if (lastFocusedEl) {
+    document.body.addEventListener("keydown", (e) => {
+      if (e.key === "Tab" && document.activeElement === lastFocusedEl) {
+        e.preventDefault();
+        btnToggleNav.focus();
+      }
+    });
+  }
+}
+
+// ===== THEME SWITCH =====
+document.addEventListener("DOMContentLoaded", function () {
+  const switchThemeEl = document.querySelector('#theme-switch');
+  const storedTheme = localStorage.getItem("theme");
+
+  if (!switchThemeEl) return;
+
+  // Apply saved theme
+  if (storedTheme === "dark" || storedTheme === null) {
+    document.body.classList.add("dark");
+    switchThemeEl.checked = true;
   } else {
-    // When menu is opened after transition change text respectively
-    setTimeout(() => {
-      btnToggleNav.textContent = "close";
-    }, 475);
+    document.body.classList.add("light");
+    switchThemeEl.checked = false;
   }
-};
 
-btnToggleNav.addEventListener("click", toggleNav);
-
-navMenu.addEventListener("click", (e) => {
-  if (e.target.localName === "a") {
-    toggleNav();
-  }
+  // Handle toggle
+  switchThemeEl.addEventListener("change", () => {
+    if (switchThemeEl.checked) {
+      document.body.classList.add("dark");
+      document.body.classList.remove("light");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.add("light");
+      document.body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  });
 });
 
-document.body.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !nav.classList.contains("hidden")) {
-    toggleNav();
-  }
-});
-
-// Animating work instances on scroll
-
+// ===== WORK ANIMATION ON SCROLL =====
 workImgs.forEach((workImg) => workImg.classList.add("transform"));
 
 let observer = new IntersectionObserver(
@@ -58,41 +99,7 @@ workEls.forEach((workEl) => {
   observer.observe(workEl);
 });
 
-// Toggle theme and store user preferred theme for future
-
-const switchThemeEl = document.querySelector('input[type="checkbox"]');
-const storedTheme = localStorage.getItem("theme");
-
-switchThemeEl.checked = storedTheme === "dark" || storedTheme === null;
-
-switchThemeEl.addEventListener("click", () => {
-  const isChecked = switchThemeEl.checked;
-
-  if (!isChecked) {
-    document.body.classList.remove("dark");
-    document.body.classList.add("light");
-    localStorage.setItem("theme", "light");
-    switchThemeEl.checked = false;
-  } else {
-    document.body.classList.add("dark");
-    document.body.classList.remove("light");
-    localStorage.setItem("theme", "dark");
-  }
-});
-
-// Trap the tab when menu is opened
-
-const lastFocusedEl = document.querySelector('a[data-focused="last-focused"]');
-
-document.body.addEventListener("keydown", (e) => {
-  if (e.key === "Tab" && document.activeElement === lastFocusedEl) {
-    e.preventDefault();
-    btnToggleNav.focus();
-  }
-});
-
-// Rotating logos animation
-
+// ===== LOGO ROTATION ANIMATION =====
 const logosWrappers = document.querySelectorAll(".logo-group");
 
 const sleep = (number) => new Promise((res) => setTimeout(res, number));
@@ -111,4 +118,7 @@ logosWrappers.forEach(async (logoWrapper, i) => {
   }, 5600);
 });
 
-yearEl.textContent = new Date().getFullYear();
+// ===== UPDATE YEAR =====
+if (yearEl) {
+  yearEl.textContent = new Date().getFullYear();
+}
